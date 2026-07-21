@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>秋枫的学习笔记</title>
+
+<!-- CSS -->
+<link rel="stylesheet" href="css/reset.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<div class="page-wrapper">
+
+  <!-- ============================================
+       Top Navigation Bar
+       ============================================ -->
+  <nav class="top-nav">
+    <a href="/" class="top-nav__logo">
+      <span class="icon-placeholder" style="width:28px;height:28px;border-radius:6px;"></span>
+      秋枫的学习笔记
+    </a>
+    <ul class="top-nav__links">
+      <li><a href="#" class="active"><span class="icon-placeholder" style="width:16px;height:16px;"></span> 首页</a></li>
+      <li><a href="#"><span class="icon-placeholder" style="width:16px;height:16px;"></span> 归档</a></li>
+      <li><a href="#"><span class="icon-placeholder" style="width:16px;height:16px;"></span> 关于</a></li>
+      <li><a href="#"><span class="icon-placeholder" style="width:16px;height:16px;"></span> 友链</a></li>
+      <li><a href="/blog" target="_blank"><span class="icon-placeholder" style="width:16px;height:16px;"></span> 博客</a></li>
+    </ul>
+  </nav>
+
+  <!-- ============================================
+       Hero Section: 图片 | 弹幕留言板 | 音乐播放器
+       ============================================ -->
+  <section class="hero-section">
+
+    <!-- 左侧：图片 + 弹幕留言板 -->
+    <div class="hero-left">
+
+      <!-- 图片区域（略小于日历，日历为 360px，此处为 280px） -->
+      <div class="hero-image-area">
+        <img
+          id="heroImage"
+          src=""
+          alt="个人照片"
+          style="display:none;"
+        >
+        <div class="hero-image-area__placeholder hero-image-area__placeholder-text">
+          <div class="icon-placeholder hero-image-area__placeholder-icon"></div>
+          照片区域<br>
+          <small>（略小于日历 · 280px）</small>
+        </div>
+      </div>
+
+      <!-- 弹幕留言板 -->
+      <div class="hero-card">
+        <div class="danmaku-card">
+          <div class="danmaku-card__header">
+            <h2 class="danmaku-card__title">
+              <span class="icon-placeholder" style="width:24px;height:24px;"></span>
+              留言弹幕
+            </h2>
+            <span class="danmaku-card__count" id="danmakuCount">0 条留言</span>
+          </div>
+          <div class="danmaku-stage" id="danmakuStage"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 右侧：音乐播放器 -->
+    <div class="hero-card hero-card--music">
+      <div class="music-card">
+        <div class="music-card__header">
+          <h2 class="music-card__title">
+            <span class="icon-placeholder" style="width:24px;height:24px;"></span>
+            音乐播放器
+          </h2>
+          <button class="music-card__playlist-btn" id="playlistToggle">
+            <span class="icon-placeholder" style="width:14px;height:14px;"></span>
+            歌单
+          </button>
+          <div class="music-playlist" id="playlistDropdown"></div>
+        </div>
+
+        <div class="music-card__now-playing">
+          <div class="music-card__cover" id="albumCover">
+            <span class="icon-placeholder music-card__cover-placeholder"></span>
+          </div>
+          <div class="music-card__track-info">
+            <div class="music-card__track-name" id="trackName">未选择歌曲</div>
+            <div class="music-card__track-artist" id="trackArtist">—</div>
+          </div>
+        </div>
+
+        <div class="music-card__progress">
+          <div class="music-card__progress-bar" id="progressBar">
+            <div class="music-card__progress-fill" id="progressFill"></div>
+          </div>
+          <div class="music-card__progress-time">
+            <span id="currentTime">00:00</span>
+            <span id="duration">00:00</span>
+          </div>
+        </div>
+
+        <div class="music-card__controls">
+          <button class="music-btn" id="btnPrev" title="上一首">
+            <span class="icon-placeholder" style="width:16px;height:16px;"></span>
+          </button>
+          <button class="music-btn music-btn--play" id="btnPlay" title="播放/暂停">
+            <span id="playIcon">▶</span>
+          </button>
+          <button class="music-btn" id="btnNext" title="下一首">
+            <span class="icon-placeholder" style="width:16px;height:16px;"></span>
+          </button>
+        </div>
+
+        <div class="music-card__volume">
+          <span class="icon-placeholder" style="width:16px;height:16px;"></span>
+          <div class="music-card__volume-slider" id="volumeSlider"></div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ============================================
+       Lyrics Bar — 歌词滚动条（Hero 正下方）
+       ============================================ -->
+  <div class="lyrics-bar-wrapper">
+    <div class="lyrics-bar">
+      <span class="icon-placeholder lyrics-bar__icon"></span>
+      <div class="lyrics-bar__inner" id="lyricsText">
+        ♪ 暂无歌词播放 — 点击音乐播放器开始播放歌曲 ♪
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       Main Content 三栏
+       ============================================ -->
+  <main class="main-content">
+
+    <!-- 左侧：分类标签 -->
+    <aside class="sidebar-left" id="categoryTags">
+      <!-- 由 category-tags.js 动态填充 -->
+    </aside>
+
+    <!-- 中间：公告栏 / 留言板 / 博客卡片 -->
+    <div class="content-center">
+
+      <!-- 公告栏 -->
+      <div class="content-card">
+        <div class="content-card__header">
+          <h3 class="content-card__title">
+            <span class="icon-placeholder" style="width:20px;height:20px;"></span>
+            公告栏
+          </h3>
+          <span class="content-card__badge">📌 置顶</span>
+        </div>
+        <div class="announcement-card__text" id="announcementText"></div>
+        <div class="announcement-card__admin-hint">🔒 仅管理员可编辑</div>
+      </div>
+
+      <!-- 留言板 -->
+      <div class="content-card">
+        <div class="content-card__header">
+          <h3 class="content-card__title">
+            <span class="icon-placeholder" style="width:20px;height:20px;"></span>
+            留言板
+          </h3>
+          <span class="content-card__badge" id="guestbookBadge">0 条留言</span>
+        </div>
+        <div class="guestbook-card__input-area">
+          <input
+            type="text"
+            class="guestbook-card__nickname"
+            id="guestbookNickname"
+            placeholder="你的昵称 *"
+            maxlength="20"
+            autocomplete="off"
+          >
+          <input
+            type="text"
+            class="guestbook-card__input"
+            id="guestbookInput"
+            placeholder="留下你想说的话..."
+            maxlength="500"
+            autocomplete="off"
+          >
+          <button class="guestbook-card__submit" id="guestbookSubmit">
+            <span class="icon-placeholder" style="width:14px;height:14px;"></span>
+            发送
+          </button>
+          <div class="guestbook-card__error-msg" id="guestbookError"></div>
+        </div>
+        <div class="guestbook-card__messages" id="guestbookMessages"></div>
+      </div>
+
+      <!-- 博客卡片 -->
+      <div class="content-card">
+        <div class="content-card__header">
+          <h3 class="content-card__title">
+            <span class="icon-placeholder" style="width:20px;height:20px;"></span>
+            最新博客
+          </h3>
+          <a href="/blog" target="_blank" style="font-size:14px;color:var(--accent-teal-dark);">
+            查看全部 →
+          </a>
+        </div>
+        <ul class="blog-card__list" id="blogList"></ul>
+      </div>
+
+    </div>
+
+    <!-- 右侧栏：天气 / 日历 / 时钟 -->
+    <aside class="sidebar-right">
+
+      <!-- 天气 -->
+      <div class="weather-widget">
+        <div class="weather-widget__header">
+          <h3 class="weather-widget__title">
+            <span class="icon-placeholder" style="width:20px;height:20px;"></span>
+            今日天气
+          </h3>
+          <span class="weather-widget__location" id="weatherLocation" title="切换城市">
+            <span class="icon-placeholder" style="width:14px;height:14px;"></span>
+            南昌
+          </span>
+        </div>
+        <div class="weather-widget__main">
+          <div class="weather-widget__icon">
+            <span class="icon-placeholder" style="width:64px;height:64px;"></span>
+          </div>
+          <div>
+            <div class="weather-widget__temp" id="weatherTemp">--°</div>
+            <div class="weather-widget__desc" id="weatherDesc">加载中...</div>
+          </div>
+        </div>
+        <div class="weather-widget__details" id="weatherDetails">
+          <span><span class="icon-placeholder" style="width:16px;height:16px;vertical-align:middle;margin-right:4px;"></span> 湿度 --%</span>
+          <span><span class="icon-placeholder" style="width:16px;height:16px;vertical-align:middle;margin-right:4px;"></span> 风速 --</span>
+          <span><span class="icon-placeholder" style="width:16px;height:16px;vertical-align:middle;margin-right:4px;"></span> 体感 --°</span>
+        </div>
+      </div>
+
+      <!-- 日历 -->
+      <div class="calendar-widget">
+        <div class="calendar-widget__header">
+          <h3 class="calendar-widget__title">
+            <span class="icon-placeholder" style="width:18px;height:18px;"></span>
+            <span id="calendarMonthLabel">7月 2026</span>
+          </h3>
+          <div class="calendar-widget__nav">
+            <button class="calendar-widget__nav-btn" id="calPrev">◀</button>
+            <button class="calendar-widget__nav-btn" id="calNext">▶</button>
+          </div>
+        </div>
+        <div class="calendar-widget__grid" id="calendarGrid"></div>
+      </div>
+
+      <!-- 时钟 -->
+      <div class="clock-widget">
+        <div class="clock-widget__label">
+          <span class="icon-placeholder" style="width:16px;height:16px;"></span>
+          当前时间
+        </div>
+        <div class="clock-widget__time" id="clockTime">00:00</div>
+        <div class="clock-widget__date" id="clockDate">—</div>
+      </div>
+
+    </aside>
+  </main>
+
+  <!-- ============================================
+       Footer
+       ============================================ -->
+  <footer class="page-footer">
+    <p>© 2026 秋枫的学习笔记. All Rights Reserved.</p>
+    <p class="page-footer__icp">
+      <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener">赣ICP备2026016208号-1</a>
+    </p>
+  </footer>
+
+</div>
+
+<!-- JavaScript（加载顺序重要） -->
+<script src="js/config.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/clock.js"></script>
+<script src="js/calendar.js"></script>
+<script src="js/weather.js"></script>
+<script src="js/announcement.js"></script>
+<script src="js/blog-list.js"></script>
+<script src="js/category-tags.js"></script>
+<script src="js/guestbook.js"></script>
+<script src="js/danmaku.js"></script>
+<script src="js/music-player.js"></script>
+<script src="js/main.js"></script>
+
+</body>
+</html>

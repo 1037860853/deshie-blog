@@ -1,0 +1,197 @@
+/* ============================================
+   Responsive — 移动端 & 平板适配
+   ============================================ */
+
+/* 平板 (≤1200px) */
+@media (max-width: 1200px) {
+  .sidebar-right {
+    width: 300px;
+  }
+
+  .hero-image-area {
+    width: 220px;
+  }
+
+  .clock-widget__time {
+    font-size: 44px;
+  }
+}
+
+/* 小平板 / 窄屏 (≤960px) */
+@media (max-width: 960px) {
+  .page-wrapper {
+    padding: 0 var(--gap-md);
+  }
+
+  /* 导航：垂直排列 */
+  .top-nav {
+    flex-direction: column;
+    height: auto;
+    gap: var(--gap-sm);
+    padding: var(--gap-sm) 0;
+  }
+
+  .top-nav__links {
+    gap: var(--gap-md);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .top-nav__links a {
+    font-size: 14px;
+  }
+
+  /* Hero：垂直堆叠 */
+  .hero-section {
+    flex-direction: column;
+  }
+
+  .hero-left {
+    flex-direction: column;
+  }
+
+  .hero-image-area {
+    width: 100%;
+    min-height: 200px;
+  }
+
+  /* 主内容：单列 */
+  .main-content {
+    flex-direction: column;
+  }
+
+  .sidebar-left {
+    flex-direction: row;
+    width: 100%;
+    overflow-x: auto;
+    padding-top: 0;
+  }
+
+  .sidebar-right {
+    width: 100%;
+  }
+
+  /* 歌词字体缩小 */
+  .lyrics-bar__inner {
+    font-size: 15px;
+  }
+
+  /* 时钟字体缩小 */
+  .clock-widget__time {
+    font-size: 42px;
+  }
+
+  /* 留言输入区垂直排列 */
+  .guestbook-card__input-area {
+    flex-direction: column;
+  }
+
+  .guestbook-card__nickname {
+    width: 100%;
+  }
+}
+
+/* 手机 (≤640px) */
+@media (max-width: 640px) {
+  .page-wrapper {
+    padding: 0 var(--gap-sm);
+  }
+
+  .top-nav__logo {
+    font-size: 20px;
+  }
+
+  .top-nav__links {
+    gap: var(--gap-sm);
+  }
+
+  .top-nav__links a {
+    font-size: 13px;
+    padding: var(--gap-xs);
+  }
+
+  /* Hero 卡片内边距缩小 */
+  .danmaku-card,
+  .music-card {
+    padding: var(--gap-md);
+    min-height: 280px;
+  }
+
+  .danmaku-card__title,
+  .music-card__title {
+    font-size: 17px;
+  }
+
+  /* 音乐播放器封面缩小 */
+  .music-card__cover {
+    width: 60px;
+    height: 60px;
+  }
+
+  .music-card__track-name {
+    font-size: 16px;
+  }
+
+  /* 弹幕字体缩小 */
+  .danmaku-msg {
+    font-size: 13px;
+  }
+
+  /* 内容卡片 */
+  .content-card {
+    padding: var(--gap-md);
+  }
+
+  /* 天气字体缩小 */
+  .weather-widget__temp {
+    font-size: 34px;
+  }
+
+  .weather-widget__details {
+    flex-wrap: wrap;
+    gap: var(--gap-sm);
+  }
+
+  /* 时钟 */
+  .clock-widget__time {
+    font-size: 36px;
+  }
+
+  /* 博客卡片 */
+  .blog-card__item {
+    flex-wrap: wrap;
+  }
+
+  .blog-card__item-date {
+    font-size: 12px;
+    margin-right: var(--gap-sm);
+  }
+
+  /* 分类标签 */
+  .category-tag {
+    width: 44px;
+    height: 44px;
+  }
+
+  .category-tag__icon {
+    width: 22px;
+    height: 22px;
+  }
+
+  /* 歌词 */
+  .lyrics-bar {
+    height: 40px;
+  }
+
+  .lyrics-bar__inner {
+    font-size: 14px;
+  }
+
+  /* 主题切换按钮 */
+  .theme-toggle {
+    width: 38px;
+    height: 38px;
+    bottom: var(--gap-md);
+    right: var(--gap-md);
+  }
+}

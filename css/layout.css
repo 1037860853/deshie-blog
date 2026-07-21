@@ -1,0 +1,178 @@
+/* ============================================
+   Layout — 页面整体骨架
+   ============================================ */
+
+.page-wrapper {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 var(--gap-lg);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ---- 顶部导航 ---- */
+.top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--gap-md) 0;
+  height: 64px;
+}
+
+.top-nav__logo {
+  font-size: 24px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+}
+
+.top-nav__logo img {
+  height: 32px;
+  vertical-align: middle;
+}
+
+.top-nav__links {
+  display: flex;
+  gap: var(--gap-xl);
+}
+
+/* ---- Hero 区块（图片 + 弹幕 | 音乐播放器）---- */
+.hero-section {
+  display: flex;
+  gap: var(--gap-lg);
+  margin-top: var(--gap-lg);
+}
+
+.hero-left {
+  flex: 1;
+  display: flex;
+  gap: var(--gap-md);
+  min-width: 0;
+}
+
+.hero-image-area {
+  width: 280px;
+  flex-shrink: 0;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  background: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 320px;
+}
+
+.hero-image-area img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-image-area__placeholder {
+  text-align: center;
+  color: var(--text-light);
+  font-size: 14px;
+}
+
+.hero-image-area__placeholder-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto var(--gap-sm);
+  opacity: 0.3;
+}
+
+.hero-card {
+  flex: 1;
+  min-width: 0;
+}
+
+.hero-card--music {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ---- 歌词滚动条（Hero 区块正下方）---- */
+.lyrics-bar-wrapper {
+  margin-top: var(--gap-lg);
+}
+
+/* ---- 主内容三栏 ---- */
+.main-content {
+  display: flex;
+  gap: var(--gap-lg);
+  margin-top: var(--gap-lg);
+  flex: 1;
+}
+
+/* 左侧分类标签 */
+.sidebar-left {
+  width: 72px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-md);
+  padding-top: var(--gap-md);
+}
+
+/* 中间主内容 */
+.content-center {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-lg);
+}
+
+/* 右侧栏 */
+.sidebar-right {
+  width: 360px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-lg);
+}
+
+/* ---- 页脚 ---- */
+.page-footer {
+  padding: var(--gap-lg) 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-light);
+  margin-top: var(--gap-xl);
+}
+
+.page-footer__icp {
+  margin-top: var(--gap-xs);
+}
+
+/* ---- 深色模式切换按钮 ---- */
+.theme-toggle {
+  position: fixed;
+  bottom: var(--gap-lg);
+  right: var(--gap-lg);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: var(--bg-card);
+  box-shadow: var(--shadow-card);
+  font-size: 20px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition-fast),
+              transform var(--transition-fast);
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+}
+
+.theme-toggle:active {
+  transform: scale(0.95);
+}
