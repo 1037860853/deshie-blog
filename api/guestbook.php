@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 /* ---- 配置 ---- */
 $dataFile = __DIR__ . '/guestbook-data.json';
-$adminPassword = 'qiufeng-admin-2026'; // 上线后务必修改
+$adminPassword = 'YOUR_ADMIN_PASSWORD'; // 上线后改为实际密码
 
 /* ---- 工具函数 ---- */
 function loadMessages() {

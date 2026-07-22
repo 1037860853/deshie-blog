@@ -12,7 +12,7 @@ var Guestbook = (function() {
   var messages = [];
   var listeners = [];
   var adminMode = false;
-  var ADMIN_PASS = 'qiufeng-admin-2026';
+  var ADMIN_PASS = 'YOUR_ADMIN_PASSWORD'; /* 上线后改为实际密码 */
 
   var $container, $input, $nickname, $submit, $badge, $errorMsg,
       $emojiBtn, $emojiPicker, $adminBtn;
