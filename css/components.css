@@ -95,28 +95,33 @@
 
 .danmaku-msg {
   position: absolute;
+  left: 0;
   white-space: nowrap;
   font-size: 15px;
   color: var(--text-primary);
   padding: 6px 14px;
   background: rgba(255, 255, 255, 0.75);
   border-radius: 20px;
-  animation: danmaku-fly 12s linear forwards;
   pointer-events: none;
   max-width: 80%;
   overflow: hidden;
   text-overflow: ellipsis;
+  /* 动画时长由 JS 动态设置 inline style */
+  animation-name: danmaku-fly;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
 }
 
 .danmaku-msg__author {
   font-weight: bold;
-  color: var(--accent-teal-dark);
+  /* 颜色由 JS 动态设置 inline style */
 }
 
+/* 从容器最右端外侧飞入，最左端外侧飞出 */
 @keyframes danmaku-fly {
-  0%   { transform: translateX(105%); opacity: 1; }
-  85%  { opacity: 1; }
-  100% { transform: translateX(-105%); opacity: 0; }
+  0%   { transform: translateX(var(--start-x, 2000px)); opacity: 1; }
+  75%  { opacity: 1; }
+  100% { transform: translateX(-100%); opacity: 0; }
 }
 
 /* ---- 音乐播放器卡片 ---- */
@@ -424,6 +429,7 @@
   flex-wrap: wrap;
   gap: var(--gap-sm);
   margin-bottom: var(--gap-md);
+  position: relative;
 }
 
 .guestbook-card__nickname {
@@ -435,14 +441,40 @@
   background: rgba(255, 255, 255, 0.6);
 }
 
-.guestbook-card__input {
+.guestbook-card__input-row {
+  display: flex;
   flex: 1;
   min-width: 150px;
+  gap: var(--gap-xs);
+}
+
+.guestbook-card__input {
+  flex: 1;
+  min-width: 100px;
   padding: 10px 14px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: var(--radius-md);
   font-size: 14px;
   background: rgba(255, 255, 255, 0.6);
+}
+
+.guestbook-card__emoji-btn {
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: var(--radius-md);
+  background: rgba(255,255,255,0.5);
+  font-size: 18px;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition-fast);
+}
+
+.guestbook-card__emoji-btn:hover {
+  background: rgba(255,255,255,0.8);
 }
 
 .guestbook-card__submit {
@@ -453,14 +485,51 @@
   color: #fff;
   font-size: 14px;
   white-space: nowrap;
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  flex-shrink: 0;
+  cursor: pointer;
   transition: background var(--transition-fast);
 }
 
 .guestbook-card__submit:hover {
   background: var(--accent-teal);
+}
+
+.guestbook-card__submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 管理员按钮 */
+.guestbook-card__admin-btn {
+  font-size: 13px;
+  padding: 2px 10px;
+  border: 1px dashed var(--text-light);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.guestbook-card__admin-btn:hover {
+  border-color: var(--accent-teal-dark);
+  color: var(--accent-teal-dark);
+}
+
+/* 留言删除按钮 */
+.guestbook-msg__delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0 4px;
+  margin-left: 4px;
+  opacity: 0.6;
+  transition: opacity var(--transition-fast);
+}
+
+.guestbook-msg__delete:hover {
+  opacity: 1;
 }
 
 .guestbook-card__nickname.error,
@@ -510,6 +579,49 @@
 .guestbook-msg__device {
   margin-left: 6px;
   opacity: 0.6;
+}
+
+/* ---- Emoji 选择器 ---- */
+.emoji-picker {
+  display: none;
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  margin-bottom: var(--gap-xs);
+  background: var(--bg-card-white);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  padding: var(--gap-sm);
+  z-index: 20;
+  max-width: 320px;
+}
+
+.emoji-picker--open {
+  display: block;
+}
+
+.emoji-picker__grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 2px;
+}
+
+.emoji-picker__item {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition-fast);
+}
+
+.emoji-picker__item:hover {
+  background: rgba(0,0,0,0.08);
 }
 
 /* 博客卡片 */

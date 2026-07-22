@@ -173,6 +173,7 @@
             留言板
           </h3>
           <span class="content-card__badge" id="guestbookBadge">0 条留言</span>
+          <button class="guestbook-card__admin-btn" id="guestbookAdminBtn" title="管理员入口">🔑 管理</button>
         </div>
         <div class="guestbook-card__input-area">
           <input
@@ -183,18 +184,21 @@
             maxlength="20"
             autocomplete="off"
           >
-          <input
-            type="text"
-            class="guestbook-card__input"
-            id="guestbookInput"
-            placeholder="留下你想说的话..."
-            maxlength="500"
-            autocomplete="off"
-          >
-          <button class="guestbook-card__submit" id="guestbookSubmit">
-            <span class="icon-placeholder" style="width:14px;height:14px;"></span>
-            发送
-          </button>
+          <div class="guestbook-card__input-row">
+            <input
+              type="text"
+              class="guestbook-card__input"
+              id="guestbookInput"
+              placeholder="留下你想说的话...（Enter 发送）"
+              maxlength="500"
+              autocomplete="off"
+            >
+            <button class="guestbook-card__emoji-btn" id="emojiBtn" type="button" title="表情">😊</button>
+            <button class="guestbook-card__submit" id="guestbookSubmit">
+              发送
+            </button>
+          </div>
+          <div class="emoji-picker" id="emojiPicker"></div>
           <div class="guestbook-card__error-msg" id="guestbookError"></div>
         </div>
         <div class="guestbook-card__messages" id="guestbookMessages"></div>

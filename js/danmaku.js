@@ -1,105 +1,179 @@
 /* ============================================
    danmaku.js — 弹幕留言模块
-   弹幕内容来源于 guestbook 留言数据
+   轨道防重叠 · 随机昵称色 · 10条上限 · 右端起始
    ============================================ */
 
 var Danmaku = (function() {
   'use strict';
 
   var U = AppUtils;
-  var $stage;
-  var $count;
+  var $stage, $count;
   var timer = null;
-  var messageSource = null; /* 留言数据源引用，由 Guestbook 模块注入 */
+  var messageSource = null;
+  var activeLanes = [];       /* 每个轨道的占用状态 */
+  var activeMsgIds = {};      /* 当前正在弹幕中的留言 ID，防重复 */
+  var LANE_HEIGHT = 34;       /* 每条轨道高度 px */
+  var COLOR_POOL = [
+    '#e74c3c', '#e67e22', '#f39c12', '#2ecc71', '#1abc9c',
+    '#3498db', '#9b59b6', '#e91e63', '#00bcd4', '#ff5722',
+    '#4caf50', '#2196f3', '#ff9800', '#795548', '#607d8b',
+  ];
 
   function init() {
-    $stage = U.el('danmakuStage');
-    $count = U.el('danmakuCount');
+    $stage = document.getElementById('danmakuStage');
+    $count = document.getElementById('danmakuCount');
     start();
   }
 
-  /**
-   * 设置留言数据源（由 Guestbook 调用）
-   */
-  function setMessageSource(sourceFn) {
-    messageSource = sourceFn;
-  }
+  function setMessageSource(fn) { messageSource = fn; }
 
-  /**
-   * 获取当前所有留言文本
-   */
   function getMessages() {
     if (messageSource) {
-      return messageSource();
+      var msgs = messageSource();
+      if (msgs && msgs.length > 0) return msgs;
     }
-    /* fallback */
-    return AppConfig.PRESET_MESSAGES || [];
+    return [];
   }
 
-  /**
-   * 发射一条弹幕
-   */
+  /* 取前 10 条（最新）*/
+  function getTopMessages() {
+    var all = getMessages();
+    if (all.length <= 10) return all.slice();
+    return all.slice(-10);
+  }
+
+  /* 随机昵称颜色 */
+  function randomAuthorColor() {
+    return COLOR_POOL[Math.floor(Math.random() * COLOR_POOL.length)];
+  }
+
+  /* 获取空闲轨道 */
+  function getFreeLane() {
+    var maxLanes = Math.max(1, Math.floor(getStageHeight() / LANE_HEIGHT));
+    /* 清理已过期的轨道占用 */
+    var now = Date.now();
+    for (var i = 0; i < activeLanes.length; i++) {
+      if (activeLanes[i] && activeLanes[i] < now) {
+        activeLanes[i] = null;
+      }
+    }
+    if (activeLanes.length < maxLanes) {
+      /* 扩展轨道数组 */
+      for (var j = activeLanes.length; j < maxLanes; j++) {
+        activeLanes.push(null);
+      }
+    }
+    /* 找空闲轨道 */
+    for (var k = 0; k < maxLanes; k++) {
+      if (!activeLanes[k] || activeLanes[k] < now) {
+        return k;
+      }
+    }
+    /* 全部占用，返回随机 */
+    return Math.floor(Math.random() * maxLanes);
+  }
+
+  /* 占用轨道（dur 秒） */
+  function occupyLane(lane, durSec) {
+    activeLanes[lane] = Date.now() + durSec * 1000 + 500;
+  }
+
+  function getStageHeight() {
+    return $stage ? $stage.clientHeight : 280;
+  }
+
+  /* 发射一条弹幕 */
   function launch(msg) {
-    if (!$stage) { return; }
+    if (!$stage) return;
+
+    /* 标记该留言正在弹幕中 */
+    var msgId = msg.id || (msg.author + '|' + msg.text);
+    activeMsgIds[msgId] = true;
 
     var el = document.createElement('div');
     el.className = 'danmaku-msg';
 
-    /* 格式：昵称：内容 */
+    /* 随机昵称颜色 */
+    var authorColor = randomAuthorColor();
     var author = msg.author || '匿名';
     var text = msg.text || '';
-    el.innerHTML = '<span class="danmaku-msg__author">' + U.escapeHtml(author) + '</span>：'
+
+    el.innerHTML =
+      '<span class="danmaku-msg__author" style="color:' + authorColor + '">'
+      + U.escapeHtml(author) + '</span>：'
       + U.escapeHtml(text);
 
-    /* 随机纵向位置 */
-    var stageHeight = $stage.clientHeight;
-    var fontSize = 15;
-    var lineHeight = 28;
-    var maxLines = Math.max(1, Math.floor(stageHeight / lineHeight));
-    var line = Math.floor(Math.random() * maxLines);
-    var top = line * lineHeight + Math.random() * 10;
-    el.style.top = Math.min(top, stageHeight - lineHeight) + 'px';
+    /* 分配到空闲轨道 */
+    var lane = getFreeLane();
+    var top = lane * LANE_HEIGHT + 4;
+    el.style.top = top + 'px';
 
-    /* 随机速度 */
-    var dur = 8 + Math.random() * 10;
+    /* 随机速度（6-12 秒） */
+    var dur = 7 + Math.random() * 6;
     el.style.animationDuration = dur + 's';
 
-    $stage.appendChild(el);
+    /* 占用轨道 */
+    occupyLane(lane, dur);
 
-    /* 动画结束后移除 */
+    /* 先插入测量宽度 */
+    el.style.visibility = 'hidden';
+    el.style.animationName = 'none';
+    $stage.appendChild(el);
+    var elWidth = el.offsetWidth;
+    var stageWidth = $stage.clientWidth;
+    /* 起始位置 = 容器宽度 + 元素宽度，确保从最右端外侧飞入 */
+    var startX = stageWidth + elWidth + 10;
+
+    /* 通过 CSS 变量传给 keyframes */
+    el.style.setProperty('--start-x', startX + 'px');
+    el.style.animationName = 'danmaku-fly';
+    el.style.visibility = 'visible';
+
+    /* 动画结束后移除，释放该留言 ID */
     el.addEventListener('animationend', function() {
-      if (el.parentNode) { el.parentNode.removeChild(el); }
+      if (el.parentNode) el.parentNode.removeChild(el);
+      delete activeMsgIds[msgId];
     });
   }
 
-  /**
-   * 启动弹幕循环
-   */
+  /* 启动循环 */
   function start() {
-    if (timer) { clearTimeout(timer); }
+    if (timer) clearTimeout(timer);
 
     function scheduleNext() {
-      var msgs = getMessages();
-      if (msgs.length > 0) {
-        var msg = msgs[Math.floor(Math.random() * msgs.length)];
+      var msgs = getTopMessages();
+      if ($count) {
+        var total = getMessages().length;
+        $count.textContent = total + ' 条留言';
+      }
+
+      /* 过滤掉正在弹幕中的留言 */
+      var available = [];
+      for (var i = 0; i < msgs.length; i++) {
+        var mid = msgs[i].id || (msgs[i].author + '|' + msgs[i].text);
+        if (!activeMsgIds[mid]) {
+          available.push(msgs[i]);
+        }
+      }
+
+      /* 如果全部都在弹幕中，等下一轮再发 */
+      if (available.length > 0) {
+        var msg = available[Math.floor(Math.random() * available.length)];
         launch(msg);
       }
-      /* 更新计数 */
-      if ($count) {
-        $count.textContent = msgs.length + ' 条留言';
-      }
-      var delay = 1500 + Math.random() * 3500;
+
+      /* 间隔 1.8-4.5 秒 */
+      var delay = 1800 + Math.random() * 2700;
       timer = setTimeout(scheduleNext, delay);
     }
 
     scheduleNext();
   }
 
-  /**
-   * 刷新弹幕（留言数据变化时调用）
-   */
   function refresh() {
-    if (timer) { clearTimeout(timer); }
+    if (timer) clearTimeout(timer);
+    activeMsgIds = {};
+    activeLanes = [];
     start();
   }
 
